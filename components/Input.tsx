@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, View } from 'react-native'
+import { Button, StyleSheet, Text, TextInput, View } from 'react-native'
 import React, { useState } from 'react'
 
 interface InputProps {
@@ -35,6 +35,9 @@ export default function Input({ autoFocus }: InputProps) {
           :"Please type more than 3 characters"}
         </Text>
       )}
+      <Button title="Confirm" onPress={() => {
+        console.log('Current text:', text);
+      }} />
     </View>
   )
 }
