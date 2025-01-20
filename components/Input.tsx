@@ -3,9 +3,10 @@ import React, { useState } from 'react'
 
 interface InputProps {
   autoFocus?: boolean;
+  InputHandler: (text: string) => void;
 }
   
-export default function Input({ autoFocus }: InputProps) {
+export default function Input({ autoFocus, InputHandler }: InputProps) {
 
   const [text, setText] = useState('');
   const [charCount, setCharCount] = useState(0);
@@ -14,6 +15,10 @@ export default function Input({ autoFocus }: InputProps) {
   const handleTextChange = (text: string) => {
     setText(text);
     setCharCount(text.length);
+  };
+  
+  const handleConfirm = () => {
+    InputHandler(text);
   };
   
   return (
@@ -35,9 +40,10 @@ export default function Input({ autoFocus }: InputProps) {
           :"Please type more than 3 characters"}
         </Text>
       )}
-      <Button title="Confirm" onPress={() => {
-        console.log('Current text:', text);
-      }} />
+      <Button 
+        title="Confirm" 
+        onPress={handleConfirm}
+      />
     </View>
   )
 }
