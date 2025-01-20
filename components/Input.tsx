@@ -1,13 +1,12 @@
-import { Button, StyleSheet, Text, TextInput, View, Modal } from 'react-native'
+import { StyleSheet, Text, TextInput, View } from 'react-native'
 import React, { useState } from 'react'
 
 interface InputProps {
   autoFocus?: boolean;
-  InputHandler: (text: string) => void;
-  visible: boolean;
 }
   
-export default function Input({ autoFocus, InputHandler, visible }: InputProps) {
+export default function Input({ autoFocus }: InputProps) {
+
   const [text, setText] = useState('');
   const [charCount, setCharCount] = useState(0);
   const [isFocused, setIsFocused] = useState(true);
@@ -15,11 +14,6 @@ export default function Input({ autoFocus, InputHandler, visible }: InputProps) 
   const handleTextChange = (text: string) => {
     setText(text);
     setCharCount(text.length);
-  };
-  
-  const handleConfirm = () => {
-    InputHandler(text);
-    setCharCount(0);
   };
   
   return (
