@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, TextInput, View, Modal, Button } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
 import Header from './components/Header';
 import Input from './components/Input';
 import { useState } from 'react';
@@ -16,6 +16,10 @@ export default function App() {
     setIsModalVisible(false);
   }
 
+  function handleCancel() {
+    setIsModalVisible(false);
+  }
+
   return (
     <View style={styles.container}>
       <Header appName={appName} />
@@ -26,7 +30,8 @@ export default function App() {
       />
       <Input 
         autoFocus={true} 
-        InputHandler={handleInputData}
+        onInput={handleInputData}
+        onCancel={handleCancel}
         visible={isModalVisible}
       />
       <Text>My goal: {inputText}</Text>

@@ -1,13 +1,14 @@
-import { Button, StyleSheet, Text, TextInput, View, Modal } from 'react-native'
+import { Button, StyleSheet, Text, TextInput, View, Modal, Alert } from 'react-native'
 import React, { useState } from 'react'
 
 interface InputProps {
   autoFocus?: boolean;
-  InputHandler: (text: string) => void;
+  onInput: (text: string) => void;
+  onCancel: () => void;
   visible: boolean;
 }
   
-export default function Input({ autoFocus, InputHandler, visible }: InputProps) {
+export default function Input({ autoFocus, onInput, onCancel, visible }: InputProps) {
   const [text, setText] = useState('');
   const [charCount, setCharCount] = useState(0);
   const [isFocused, setIsFocused] = useState(true);
@@ -18,8 +19,19 @@ export default function Input({ autoFocus, InputHandler, visible }: InputProps) 
   };
   
   const handleConfirm = () => {
-    InputHandler(text);
+    onInput(text);
     setCharCount(0);
+  };
+
+  const handleCancel = () => {
+    Alert.alert(
+      'Cancel',
+      'Are you sure you want to cancel?',
+      [
+        { text: 'No', style: 'cancel' },
+        { text: 'OK', onPress: () => onCancel() },
+      ]
+    );
   };
   
   return (
@@ -56,6 +68,11 @@ export default function Input({ autoFocus, InputHandler, visible }: InputProps) 
             <Button 
               title="Confirm" 
               onPress={handleConfirm}
+            />
+            <Button 
+              title="Cancel" 
+              onPress={handleCancel}
+              color="red"
             />
           </View>
         </View>
@@ -94,8 +111,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   buttonContainer: {
-    width: '40%',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
     marginTop: 5,
     marginBottom: 5,
+  },
+  button: {
+    width: '40%',  // 每个按钮占40%宽度
   },
 });
