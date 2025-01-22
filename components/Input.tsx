@@ -65,15 +65,19 @@ export default function Input({ autoFocus, onInput, onCancel, visible }: InputPr
             </Text>
           )}
           <View style={styles.buttonContainer}>
-            <Button 
-              title="Confirm" 
-              onPress={handleConfirm}
+            <View style={styles.button}>
+              <Button 
+                title="Confirm" 
+                onPress={handleConfirm}
             />
-            <Button 
-              title="Cancel" 
-              onPress={handleCancel}
-              color="red"
-            />
+            </View>
+            <View style={styles.button}>
+              <Button 
+                title="Cancel" 
+                onPress={handleCancel}
+                color="red"
+              />
+            </View>
           </View>
         </View>
       </View>
@@ -112,12 +116,11 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     width: '100%',
-    marginTop: 5,
-    marginBottom: 5,
+    marginTop: 10,
   },
   button: {
-    width: '40%',  // 每个按钮占40%宽度
+    width: '45%',
   },
 });
