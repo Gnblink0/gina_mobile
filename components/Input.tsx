@@ -8,6 +8,8 @@ interface InputProps {
   visible: boolean;
 }
   
+const MIN_CHARS_REQUIRED = 3;
+
 export default function Input({ autoFocus, onInput, onCancel, visible }: InputProps) {
   const [text, setText] = useState('');
   const [charCount, setCharCount] = useState(0);
@@ -64,7 +66,7 @@ export default function Input({ autoFocus, onInput, onCancel, visible }: InputPr
 
           {!isFocused && (
             <Text style={styles.messageText}>
-              {text.length >= 3
+              {text.length >= MIN_CHARS_REQUIRED
                 ? "Thank you"
                 : "Please type more than 3 characters"}
             </Text>
@@ -74,7 +76,8 @@ export default function Input({ autoFocus, onInput, onCancel, visible }: InputPr
               <Button 
                 title="Confirm" 
                 onPress={handleConfirm}
-            />
+                disabled={text.length < MIN_CHARS_REQUIRED}
+              />
             </View>
             <View style={styles.button}>
               <Button 
