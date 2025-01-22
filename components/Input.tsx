@@ -1,4 +1,4 @@
-import { Button, StyleSheet, Text, TextInput, View, Modal, Alert } from 'react-native'
+import { Button, StyleSheet, Text, TextInput, View, Modal, Alert, Image } from 'react-native'
 import React, { useState } from 'react'
 
 interface InputProps {
@@ -48,7 +48,19 @@ export default function Input({ autoFocus, onInput, onCancel, visible }: InputPr
       transparent={true}
     >
       <View style={styles.container}>
-        <View style={styles.inputContainer}>
+        <View style=  {styles.inputContainer}>
+          <Image
+            source={require('../assets/target-logo.png')}
+            style={styles.image}
+            accessibilityLabel="A target icon from local"
+          />
+          <Image 
+            source={{ 
+              uri: 'https://cdn-icons-png.flaticon.com/512/2617/2617812.png' 
+            }}
+            style={styles.image}
+            accessibilityLabel="A target icon from network"
+          />
           <TextInput
             style={styles.input}
             placeholder="Please type something"
@@ -130,5 +142,10 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '45%',
+  },
+  image: {
+    width: 100,
+    height: 100,
+    marginBottom: 10,
   },
 });
