@@ -20,6 +20,7 @@ export default function Input({ autoFocus, onInput, onCancel, visible }: InputPr
   
   const handleConfirm = () => {
     onInput(text);
+    setText('');
     setCharCount(0);
   };
 
@@ -29,7 +30,11 @@ export default function Input({ autoFocus, onInput, onCancel, visible }: InputPr
       'Are you sure you want to cancel?',
       [
         { text: 'No', style: 'cancel' },
-        { text: 'OK', onPress: () => onCancel() },
+        { text: 'OK', onPress: () => {
+          onCancel();
+          setText('');
+          setCharCount(0);
+        } },
       ]
     );
   };
