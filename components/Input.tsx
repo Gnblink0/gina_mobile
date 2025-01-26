@@ -1,13 +1,16 @@
-import { Button, StyleSheet, Text, TextInput, View, Modal } from 'react-native'
+import { Button, StyleSheet, Text, TextInput, View, Modal, Alert, Image } from 'react-native'
 import React, { useState } from 'react'
 
 interface InputProps {
   autoFocus?: boolean;
-  InputHandler: (text: string) => void;
+  onInput: (text: string) => void;
+  onCancel: () => void;
   visible: boolean;
 }
   
-export default function Input({ autoFocus, InputHandler, visible }: InputProps) {
+const MIN_CHARS_REQUIRED = 3;
+
+export default function Input({ autoFocus, onInput, onCancel, visible }: InputProps) {
   const [text, setText] = useState('');
   const [charCount, setCharCount] = useState(0);
   const [isFocused, setIsFocused] = useState(true);
@@ -18,8 +21,24 @@ export default function Input({ autoFocus, InputHandler, visible }: InputProps) 
   };
   
   const handleConfirm = () => {
-    InputHandler(text);
+    onInput(text);
+    setText('');
     setCharCount(0);
+  };
+
+  const handleCancel = () => {
+    Alert.alert(
+      'Cancel',
+      'Are you sure you want to cancel?',
+      [
+        { text: 'No', style: 'cancel' },
+        { text: 'OK', onPress: () => {
+          onCancel();
+          setText('');
+          setCharCount(0);
+        } },
+      ]
+    );
   };
   
   return (
@@ -29,7 +48,19 @@ export default function Input({ autoFocus, InputHandler, visible }: InputProps) 
       transparent={true}
     >
       <View style={styles.container}>
-        <View style={styles.inputContainer}>
+        <View style=  {styles.inputContainer}>
+          <Image
+            source={require('../assets/target-logo.png')}
+            style={styles.image}
+            accessibilityLabel="A target icon from local"
+          />
+          <Image 
+            source={{ 
+              uri: 'https://cdn-icons-png.flaticon.com/512/2617/2617812.png' 
+            }}
+            style={styles.image}
+            accessibilityLabel="A target icon from network"
+          />
           <TextInput
             style={styles.input}
             placeholder="Please type something"
@@ -47,16 +78,26 @@ export default function Input({ autoFocus, InputHandler, visible }: InputProps) 
 
           {!isFocused && (
             <Text style={styles.messageText}>
-              {text.length >= 3
+              {text.length >= MIN_CHARS_REQUIRED
                 ? "Thank you"
                 : "Please type more than 3 characters"}
             </Text>
           )}
           <View style={styles.buttonContainer}>
-            <Button 
-              title="Confirm" 
-              onPress={handleConfirm}
-            />
+            <View style={styles.button}>
+              <Button 
+                title="Confirm" 
+                onPress={handleConfirm}
+                disabled={text.length < MIN_CHARS_REQUIRED}
+              />
+            </View>
+            <View style={styles.button}>
+              <Button 
+                title="Cancel" 
+                onPress={handleCancel}
+                color="red"
+              />
+            </View>
           </View>
         </View>
       </View>
@@ -94,8 +135,17 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   buttonContainer: {
-    width: '40%',
-    marginTop: 5,
-    marginBottom: 5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginTop: 10,
+  },
+  button: {
+    width: '45%',
+  },
+  image: {
+    width: 100,
+    height: 100,
+    marginBottom: 10,
   },
 });
