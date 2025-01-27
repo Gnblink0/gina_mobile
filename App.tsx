@@ -43,7 +43,12 @@ export default function App() {
         />
       </View>
       <View style={styles.buttonSection}>
-        {inputText && <Text style={styles.goalText}>{inputText}</Text>}
+        {/* {inputText && <Text style={styles.goalText}>{inputText}</Text>} */}
+        {goals.map((goal) => (
+          <View key={goal.id} style={styles.goalItem}>
+            <Text style={styles.goalText}>{goal.text}</Text>
+          </View>
+        ))}
       </View>
     </SafeAreaView>
   );
@@ -76,7 +81,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     backgroundColor: "pink",
+  },
+  goalItem: {
     padding: 10,
+    width: "100%",
     borderRadius: 10,
+    backgroundColor: "pink",
   },
 });
