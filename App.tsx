@@ -6,6 +6,7 @@ import {
   Button,
   SafeAreaView,
   ScrollView,
+  FlatList,
 } from "react-native";
 import Header from "./components/Header";
 import Input from "./components/Input";
@@ -49,13 +50,26 @@ export default function App() {
         />
       </View>
       <View style={styles.bottomSection}>
-        <ScrollView contentContainerStyle={styles.goalList} style={{ flex: 1 }}>
+        <FlatList
+          contentContainerStyle={styles.goalList}
+          style={{ flex: 1, backgroundColor: "red" }}
+          data={goals}
+          renderItem={({ item }) => {
+            // console.log(item);
+            return (
+              <View style={styles.goalItem}>
+                <Text style={styles.goalText}>{item.text}</Text>
+              </View>
+            );
+          }}
+        />
+        {/* <ScrollView contentContainerStyle={styles.goalList} style={{ flex: 1 }}>
           {goals.map((goal) => (
             <View key={goal.id} style={styles.goalItem}>
               <Text style={styles.goalText}>{goal.text}</Text>
             </View>
           ))}
-        </ScrollView>
+        </ScrollView> */}
       </View>
     </SafeAreaView>
   );
@@ -83,21 +97,20 @@ const styles = StyleSheet.create({
     marginTop: 30,
     margin: 10,
   },
+  goalList: {
+    alignItems: "center",
+    paddingVertical: 20,
+  },
   goalText: {
     fontSize: 20,
     fontWeight: "bold",
-    backgroundColor: "pink",
   },
   goalItem: {
+    width: "90%",
     padding: 10,
-    width: "80%",
     height: 300,
     marginBottom: 40,
     borderRadius: 10,
     backgroundColor: "pink",
-  },
-  goalList: {
-    alignItems: "center",
-    paddingVertical: 20,
   },
 });
