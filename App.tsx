@@ -34,7 +34,7 @@ export default function App() {
         />
       </View>
       <View style={styles.buttonSection}>
-        <Text>My goal: {inputText}</Text>
+        {inputText && <Text style={styles.goalText}>{inputText}</Text>}
       </View>
     </SafeAreaView>
   );
@@ -62,5 +62,12 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 30,
     margin: 10,
+  },
+  goalText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    backgroundColor: "pink",
+    padding: 10,
+    borderRadius: 10,
   },
 });
