@@ -1,5 +1,12 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Button, SafeAreaView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  SafeAreaView,
+  ScrollView,
+} from "react-native";
 import Header from "./components/Header";
 import Input from "./components/Input";
 import { useState } from "react";
@@ -26,7 +33,6 @@ export default function App() {
     setIsModalVisible(false);
   }
 
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerSection}>
@@ -42,13 +48,14 @@ export default function App() {
           visible={isModalVisible}
         />
       </View>
-      <View style={styles.buttonSection}>
-        {/* {inputText && <Text style={styles.goalText}>{inputText}</Text>} */}
-        {goals.map((goal) => (
-          <View key={goal.id} style={styles.goalItem}>
-            <Text style={styles.goalText}>{goal.text}</Text>
-          </View>
-        ))}
+      <View style={styles.bottomSection}>
+        <ScrollView contentContainerStyle={styles.goalList} style={{ flex: 1 }}>
+          {goals.map((goal) => (
+            <View key={goal.id} style={styles.goalItem}>
+              <Text style={styles.goalText}>{goal.text}</Text>
+            </View>
+          ))}
+        </ScrollView>
       </View>
     </SafeAreaView>
   );
@@ -67,10 +74,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  buttonSection: {
+  bottomSection: {
     width: "100%",
     flex: 4,
-    alignItems: "center",
     backgroundColor: "#f5f5f5",
   },
   button: {
@@ -84,8 +90,14 @@ const styles = StyleSheet.create({
   },
   goalItem: {
     padding: 10,
-    width: "100%",
+    width: "80%",
+    height: 300,
+    marginBottom: 40,
     borderRadius: 10,
     backgroundColor: "pink",
+  },
+  goalList: {
+    alignItems: "center",
+    paddingVertical: 20,
   },
 });
