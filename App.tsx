@@ -4,19 +4,28 @@ import Header from "./components/Header";
 import Input from "./components/Input";
 import { useState } from "react";
 
+interface Goal {
+  id: number;
+  text: string;
+}
+
 export default function App() {
   const appName = "my awesome app";
   const [inputText, setInputText] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [goals, setGoals] = useState<Goal[]>([]);
 
   function handleInputData(text: string) {
-    setInputText(text);
+    console.log("data received from input", text);
+    // setInputText(text);
+    setGoals((prevGoals) => [...prevGoals, { id: Math.random(), text: text }]);
     setIsModalVisible(false);
   }
 
   function handleCancel() {
     setIsModalVisible(false);
   }
+
 
   return (
     <SafeAreaView style={styles.container}>
