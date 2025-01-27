@@ -8,8 +8,13 @@ interface HeaderProps {
 export default function Header({ appName }: HeaderProps) {
   return (
     <View>
-      <Text>Welcome to {appName}</Text>
+      <Text style={styles.headerText}>Welcome to {appName}</Text>
     </View>
   )
 }
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    headerText: {
+        fontSize: 20,
+        fontWeight: "bold",
+    }
+})
