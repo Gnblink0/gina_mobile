@@ -11,6 +11,7 @@ import {
 import Header from "./components/Header";
 import Input from "./components/Input";
 import { useState } from "react";
+import GoalItem from "./components/GoalItem";
 
 interface Goal {
   id: number;
@@ -51,17 +52,9 @@ export default function App() {
       </View>
       <View style={styles.bottomSection}>
         <FlatList
-          contentContainerStyle={styles.goalList}
-          style={{ flex: 1, backgroundColor: "red" }}
+          style={styles.goalList}
           data={goals}
-          renderItem={({ item }) => {
-            // console.log(item);
-            return (
-              <View style={styles.goalItem}>
-                <Text style={styles.goalText}>{item.text}</Text>
-              </View>
-            );
-          }}
+          renderItem={({ item }) => <GoalItem text={item.text} />}
         />
         {/* <ScrollView contentContainerStyle={styles.goalList} style={{ flex: 1 }}>
           {goals.map((goal) => (
@@ -98,19 +91,8 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   goalList: {
-    alignItems: "center",
+    width: "100%",
+    paddingHorizontal: 20,
     paddingVertical: 20,
-  },
-  goalText: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  goalItem: {
-    width: "90%",
-    padding: 10,
-    height: 300,
-    marginBottom: 40,
-    borderRadius: 10,
-    backgroundColor: "pink",
   },
 });
