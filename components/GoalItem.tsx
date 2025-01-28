@@ -30,8 +30,7 @@ const styles = StyleSheet.create({
     width: "100%",
     padding: 10,
     height: 70,
-    marginBottom: 10,
     borderRadius: 10,
-    backgroundColor: "pink",
+    backgroundColor: "#fce8d4",
   },
 });
