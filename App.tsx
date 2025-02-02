@@ -7,6 +7,8 @@ import {
   SafeAreaView,
   ScrollView,
   FlatList,
+  TouchableOpacity,
+  Alert,
 } from "react-native";
 import Header from "./components/Header";
 import Input from "./components/Input";
@@ -39,6 +41,24 @@ export default function App() {
     setGoals((prevGoals) => prevGoals.filter((goal) => goal.id !== id));
   }
 
+  function handleDeleteAll() {
+    Alert.alert(
+      "Delete all goals",
+      "Are you sure you want to delete all goals?",
+      [
+        {
+          text: "No",
+          style: "cancel",
+        },
+        {
+          text: "Yes",
+          style: "destructive",
+          onPress: () => setGoals([]),
+        },
+      ]
+    );
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerSection}>
@@ -57,7 +77,23 @@ export default function App() {
       <View style={styles.bottomSection}>
         <FlatList
           style={styles.goalList}
+          contentContainerStyle={{ flex: 1, alignItems: "center" }}
           data={goals}
+          ListEmptyComponent={() => (
+            <Text style={styles.emptyListText}>No goals to show</Text>
+          )}
+          ListHeaderComponent={() =>
+            goals.length > 0 && (
+              <Text style={styles.listHeaderText}>My Goals List</Text>
+            )
+          }
+          ListFooterComponent={() =>
+            goals.length > 0 && (
+              <TouchableOpacity onPress={handleDeleteAll}>
+                <Text style={styles.listFooterText}>Delete all</Text>
+              </TouchableOpacity>
+            )
+          }
           renderItem={({ item }) => (
             <GoalItem
               text={item.text}
@@ -65,6 +101,7 @@ export default function App() {
               onDeleteGoal={handleDeleteGoal}
             />
           )}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
         />
       </View>
     </SafeAreaView>
@@ -91,11 +128,38 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 30,
-    margin: 10,
   },
   goalList: {
     width: "100%",
     paddingHorizontal: 20,
     paddingVertical: 20,
+  },
+  emptyListText: {
+    textAlign: "center",
+    marginTop: 15,
+    color: "gray",
+  },
+  listHeaderText: {
+    textAlign: "center",
+    marginTop: 15,
+    marginBottom: 20,
+    color: "black",
+  },
+  listFooterText: {
+    textAlign: "center",
+    marginTop: 15,
+    color: "red",
+    backgroundColor: "pink",
+    fontWeight: "bold",
+    fontSize: 16,
+    width: "100%",
+    padding: 10,
+    borderRadius: 10,
+  },
+  separator: {
+    height: 1,
+    backgroundColor: "#e0e0e0",
+    marginHorizontal: 10,
+    marginVertical: 5,
   },
 });
