@@ -14,25 +14,32 @@ import Header from "./components/Header";
 import Input from "./components/Input";
 import { useState } from "react";
 import GoalItem from "./components/GoalItem";
-import { app } from "./Firebase/firebaseSetup";
+import { app, database } from "./Firebase/firebaseSetup";
+import { writeToDB, goalData } from "./Firebase/firestoreHelper";
 
-interface Goal {
+interface GoalDB {
   id: number;
   text: string;
 }
 
 export default function App() {
-  console.log(app);
   const appName = "my awesome app";
   const [inputText, setInputText] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [goals, setGoals] = useState<Goal[]>([]);
+  const [goals, setGoals] = useState<GoalDB[]>([]);
 
   function handleInputData(text: string) {
     console.log("data received from input", text);
     // setInputText(text);
-    setGoals((prevGoals) => [...prevGoals, { id: Math.random(), text: text }]);
-    setIsModalVisible(false);
+    let newGoal: goalData = { text: text };
+    writeToDB(newGoal, "goals")
+      .then((id) => {
+        console.log("Document written with ID: ", id);
+        setIsModalVisible(false);
+      })
+      .catch((error) => {
+        console.error("Failed to add goal: ", error);
+      });
   }
 
   function handleCancel() {
