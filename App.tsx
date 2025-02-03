@@ -12,13 +12,14 @@ import {
 } from "react-native";
 import Header from "./components/Header";
 import Input from "./components/Input";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import GoalItem from "./components/GoalItem";
 import { app, database } from "./Firebase/firebaseSetup";
 import { writeToDB, goalData } from "./Firebase/firestoreHelper";
+import { collection, onSnapshot } from "firebase/firestore";
 
 interface GoalDB {
-  id: number;
+  id: string;
   text: string;
 }
 
@@ -27,6 +28,25 @@ export default function App() {
   const [inputText, setInputText] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [goals, setGoals] = useState<GoalDB[]>([]);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      collection(database, "goals"),
+      (querySnapshot) => {
+        if (querySnapshot.empty) {
+          setGoals([]);
+        } else {
+          const updatedGoals: GoalDB[] = [];
+          querySnapshot.forEach((doc) => {
+            updatedGoals.push({ id: doc.id, text: doc.data().text });
+          });
+          setGoals(updatedGoals);
+        }
+      }
+    ); 
+
+    return () => unsubscribe();
+  }, []);
 
   function handleInputData(text: string) {
     console.log("data received from input", text);
@@ -46,7 +66,7 @@ export default function App() {
     setIsModalVisible(false);
   }
 
-  function handleDeleteGoal(id: number) {
+  function handleDeleteGoal(id: string) {
     setGoals((prevGoals) => prevGoals.filter((goal) => goal.id !== id));
   }
 
