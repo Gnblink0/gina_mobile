@@ -12,11 +12,19 @@ import {
 } from "react-native";
 import Header from "./components/Header";
 import Input from "./components/Input";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import GoalItem from "./components/GoalItem";
+import { app, database } from "./Firebase/firebaseSetup";
+import {
+  writeToDB,
+  goalData,
+  deleteFromDB,
+  deleteAllFromDB,
+} from "./Firebase/firestoreHelper";
+import { collection, onSnapshot } from "firebase/firestore";
 
-interface Goal {
-  id: number;
+interface GoalDB {
+  id: string;
   text: string;
 }
 
@@ -24,21 +32,54 @@ export default function App() {
   const appName = "my awesome app";
   const [inputText, setInputText] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [goals, setGoals] = useState<Goal[]>([]);
+  const [goals, setGoals] = useState<GoalDB[]>([]);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      collection(database, "goals"),
+      (querySnapshot) => {
+        if (querySnapshot.empty) {
+          setGoals([]);
+        } else {
+          const updatedGoals: GoalDB[] = [];
+          querySnapshot.forEach((doc) => {
+            updatedGoals.push({ id: doc.id, text: doc.data().text });
+          });
+          setGoals(updatedGoals);
+        }
+      }
+    );
+
+    return () => unsubscribe();
+  }, []);
 
   function handleInputData(text: string) {
     console.log("data received from input", text);
     // setInputText(text);
-    setGoals((prevGoals) => [...prevGoals, { id: Math.random(), text: text }]);
-    setIsModalVisible(false);
+    let newGoal: goalData = { text: text };
+    writeToDB(newGoal, "goals")
+      .then((id) => {
+        console.log("Document written with ID: ", id);
+        setIsModalVisible(false);
+      })
+      .catch((error) => {
+        console.error("Failed to add goal: ", error);
+      });
   }
 
   function handleCancel() {
     setIsModalVisible(false);
   }
 
-  function handleDeleteGoal(id: number) {
-    setGoals((prevGoals) => prevGoals.filter((goal) => goal.id !== id));
+  function handleDeleteGoal(id: string) {
+    console.log("Attempting to delete goal with ID:", id);
+    deleteFromDB(id, "goals")
+      .then(() => {
+        console.log("Goal deleted successfully");
+      })
+      .catch((error) => {
+        console.error("Failed to delete goal: ", error);
+      });
   }
 
   function handleDeleteAll() {
@@ -53,7 +94,15 @@ export default function App() {
         {
           text: "Yes",
           style: "destructive",
-          onPress: () => setGoals([]),
+          onPress: () => {
+            deleteAllFromDB("goals")
+              .then(() => {
+                console.log("All goals deleted successfully");
+              })
+              .catch((error) => {
+                console.error("Failed to delete all goals: ", error);
+              });
+          },
         },
       ]
     );
