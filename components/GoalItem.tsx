@@ -2,9 +2,9 @@ import { Button, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
 interface GoalItemProps {
-  id: number;
+  id: string;
   text: string;
-  onDeleteGoal: (id: number) => void;
+  onDeleteGoal: (id: string) => void;
 }
 
 export default function GoalItem({ id, text, onDeleteGoal }: GoalItemProps) {

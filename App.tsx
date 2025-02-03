@@ -15,7 +15,12 @@ import Input from "./components/Input";
 import { useState, useEffect } from "react";
 import GoalItem from "./components/GoalItem";
 import { app, database } from "./Firebase/firebaseSetup";
-import { writeToDB, goalData } from "./Firebase/firestoreHelper";
+import {
+  writeToDB,
+  goalData,
+  deleteFromDB,
+  deleteAllFromDB,
+} from "./Firebase/firestoreHelper";
 import { collection, onSnapshot } from "firebase/firestore";
 
 interface GoalDB {
@@ -43,7 +48,7 @@ export default function App() {
           setGoals(updatedGoals);
         }
       }
-    ); 
+    );
 
     return () => unsubscribe();
   }, []);
@@ -67,7 +72,14 @@ export default function App() {
   }
 
   function handleDeleteGoal(id: string) {
-    setGoals((prevGoals) => prevGoals.filter((goal) => goal.id !== id));
+    console.log("Attempting to delete goal with ID:", id);
+    deleteFromDB(id, "goals")
+      .then(() => {
+        console.log("Goal deleted successfully");
+      })
+      .catch((error) => {
+        console.error("Failed to delete goal: ", error);
+      });
   }
 
   function handleDeleteAll() {
@@ -82,7 +94,15 @@ export default function App() {
         {
           text: "Yes",
           style: "destructive",
-          onPress: () => setGoals([]),
+          onPress: () => {
+            deleteAllFromDB("goals")
+              .then(() => {
+                console.log("All goals deleted successfully");
+              })
+              .catch((error) => {
+                console.error("Failed to delete all goals: ", error);
+              });
+          },
         },
       ]
     );
