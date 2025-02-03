@@ -14,6 +14,7 @@ import Header from "./components/Header";
 import Input from "./components/Input";
 import { useState } from "react";
 import GoalItem from "./components/GoalItem";
+import { app } from "./Firebase/firebaseSetup";
 
 interface Goal {
   id: number;
@@ -21,6 +22,7 @@ interface Goal {
 }
 
 export default function App() {
+  console.log(app);
   const appName = "my awesome app";
   const [inputText, setInputText] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
