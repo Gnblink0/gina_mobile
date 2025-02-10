@@ -13,7 +13,7 @@ export default function GoalItem({ id, text, onDeleteGoal }: GoalItemProps) {
     <View style={styles.goalItem}>
       <Text style={styles.goalText}>{text}</Text>
       <Button title="X" onPress={() => onDeleteGoal(id)} color="red" />
-      <Button title="info" onPress={() => {router.navigate(`/goals/${id}`)}}/>
+      <Button title="info" onPress={() => {router.navigate(`/goals/${id}?sort=asc`)}}/>
     </View>
   )
 }

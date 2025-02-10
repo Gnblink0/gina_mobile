@@ -4,14 +4,15 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  getDoc,
 } from "firebase/firestore";
 import { database } from "./firebaseSetup";
 
-export interface goalData {
+export interface GoalData {
   text: string;
 }
 
-export async function writeToDB(data: goalData, collectionName: string) {
+export async function writeToDB(data: GoalData, collectionName: string) {
   try {
     const docRef = await addDoc(collection(database, collectionName), data);
     return docRef.id;
@@ -39,5 +40,20 @@ export async function deleteAllFromDB(collectionName: string) {
     console.log("All documents successfully deleted!");
   } catch (error) {
     console.error("Error deleting documents: ", error);
+  }
+}
+
+export async function getGoalFromDB(id: string, collectionName: string) {
+  try {
+    const docRef = doc(collection(database, collectionName), id);
+    const docSnapShot = await getDoc(docRef);
+    if (docSnapShot.exists()) {
+      return docSnapShot.data();
+    } else {
+      console.log("No such document!");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error getting document: ", error);
   }
 }

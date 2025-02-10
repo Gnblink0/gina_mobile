@@ -14,10 +14,10 @@ import Header from "../components/Header";
 import Input from "../components/Input";
 import { useState, useEffect } from "react";
 import GoalItem from "../components/GoalItem";
-import { app, database } from "../Firebase/firebaseSetup";
+import { database } from "../Firebase/firebaseSetup";
 import {
   writeToDB,
-  goalData,
+  GoalData,
   deleteFromDB,
   deleteAllFromDB,
 } from "../Firebase/firestoreHelper";
@@ -56,7 +56,7 @@ export default function App() {
   function handleInputData(text: string) {
     console.log("data received from input", text);
     // setInputText(text);
-    let newGoal: goalData = { text: text };
+    let newGoal: GoalData = { text: text };
     writeToDB(newGoal, "goals")
       .then((id) => {
         console.log("Document written with ID: ", id);
