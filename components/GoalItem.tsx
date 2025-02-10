@@ -1,5 +1,6 @@
 import { Button, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import { Link, router } from 'expo-router';
 
 interface GoalItemProps {
   id: string;
@@ -12,6 +13,7 @@ export default function GoalItem({ id, text, onDeleteGoal }: GoalItemProps) {
     <View style={styles.goalItem}>
       <Text style={styles.goalText}>{text}</Text>
       <Button title="X" onPress={() => onDeleteGoal(id)} color="red" />
+      <Button title="info" onPress={() => {router.navigate(`/goals/${id}`)}}/>
     </View>
   )
 }
