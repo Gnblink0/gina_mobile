@@ -5,6 +5,7 @@ import {
   doc,
   getDocs,
   getDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { database } from "./firebaseSetup";
 
@@ -57,3 +58,8 @@ export async function getGoalFromDB(id: string, collectionName: string) {
     console.error("Error getting document: ", error);
   }
 }
+
+export const updateDB = async (id: string, data: { warning: boolean }) => {
+  const docRef = doc(database, "goals", id);
+  await updateDoc(docRef, data);
+};
