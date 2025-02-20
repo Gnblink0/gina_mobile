@@ -14,7 +14,16 @@ export default function GoalItem({ id, text, onDeleteGoal }: GoalItemProps) {
     router.navigate(`/goals/${id}?sort=asc`);
   }
   return (
-    <Pressable style={[styles.goalItem, styles.textContainer]}>
+    <Pressable
+    style={[styles.goalItem, styles.textContainer]}
+    onPress={onPress}
+    android_ripple={{
+      color: '#dddddd', 
+      borderless: false,
+      foreground: true, 
+      radius: 300      
+    }}
+    >
       <Text style={styles.goalText}>{text}</Text>
       <Button title="X" onPress={() => onDeleteGoal(id)} color="red" />
     </Pressable>
