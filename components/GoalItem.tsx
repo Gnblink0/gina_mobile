@@ -1,6 +1,8 @@
 import { Button, Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Link, router } from 'expo-router';
+import PressableButton from './PressableButoon';
+import { color } from 'html2canvas/dist/types/css/types/color';
 
 interface GoalItemProps {
   id: string;
@@ -27,7 +29,9 @@ export default function GoalItem({ id, text, onDeleteGoal }: GoalItemProps) {
       }}
     >
       <Text style={styles.goalText}>{text}</Text>
-      <Button title="X" onPress={() => onDeleteGoal(id)} color="red" />
+      <PressableButton onPress={() => onDeleteGoal(id)} style={styles.deleteButton}>
+        <Text style={styles.deleteText}>X</Text>
+      </PressableButton>
     </Pressable>
   );
 }
@@ -51,5 +55,13 @@ const styles = StyleSheet.create({
   },
   pressedStyle: {
     backgroundColor: "#f0f0f0",
+  },
+  deleteButton: {
+    backgroundColor: "red",
+  },
+  deleteText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
