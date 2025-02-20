@@ -1,8 +1,9 @@
-import { Button, Pressable, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { Link, router } from 'expo-router';
-import PressableButton from './PressableButoon';
-import { color } from 'html2canvas/dist/types/css/types/color';
+import { Button, Pressable, StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { Link, router } from "expo-router";
+import PressableButton from "./PressableButoon";
+import { color } from "html2canvas/dist/types/css/types/color";
+import { MaterialIcons } from "@expo/vector-icons";
 
 interface GoalItemProps {
   id: string;
@@ -11,16 +12,15 @@ interface GoalItemProps {
 }
 
 export default function GoalItem({ id, text, onDeleteGoal }: GoalItemProps) {
-
   const onPress = () => {
     router.navigate(`/goals/${id}?sort=asc`);
-  }
+  };
   return (
     <Pressable
       style={({ pressed }) => {
         return [styles.textContainer, pressed && styles.pressedStyle];
       }}
-      onPress={onPress} 
+      onPress={onPress}
       android_ripple={{
         color: "#dddddd",
         borderless: false,
@@ -29,8 +29,11 @@ export default function GoalItem({ id, text, onDeleteGoal }: GoalItemProps) {
       }}
     >
       <Text style={styles.goalText}>{text}</Text>
-      <PressableButton onPress={() => onDeleteGoal(id)} style={styles.deleteButton}>
-        <Text style={styles.deleteText}>X</Text>
+      <PressableButton
+        onPress={() => onDeleteGoal(id)}
+        style={styles.deleteButton}
+      >
+        <MaterialIcons name="delete" size={20} color="white" />
       </PressableButton>
     </Pressable>
   );
@@ -58,10 +61,5 @@ const styles = StyleSheet.create({
   },
   deleteButton: {
     backgroundColor: "red",
-  },
-  deleteText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
   },
 });
