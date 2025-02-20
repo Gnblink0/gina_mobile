@@ -15,19 +15,21 @@ export default function GoalItem({ id, text, onDeleteGoal }: GoalItemProps) {
   }
   return (
     <Pressable
-    style={[styles.goalItem, styles.textContainer]}
-    onPress={onPress}
-    android_ripple={{
-      color: '#dddddd', 
-      borderless: false,
-      foreground: true, 
-      radius: 300      
-    }}
+      style={({ pressed }) => {
+        return [styles.textContainer, pressed && styles.pressedStyle];
+      }}
+      onPress={onPress} 
+      android_ripple={{
+        color: "#dddddd",
+        borderless: false,
+        foreground: true,
+        radius: 300,
+      }}
     >
       <Text style={styles.goalText}>{text}</Text>
       <Button title="X" onPress={() => onDeleteGoal(id)} color="red" />
     </Pressable>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -37,7 +39,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
-  goalItem: {
+  textContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -47,7 +49,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#fce8d4",
   },
-  textContainer: {
-    
+  pressedStyle: {
+    backgroundColor: "#f0f0f0",
   },
 });
