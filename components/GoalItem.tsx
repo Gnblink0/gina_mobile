@@ -1,4 +1,4 @@
-import { Button, StyleSheet, Text, View } from 'react-native'
+import { Button, Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Link, router } from 'expo-router';
 
@@ -9,12 +9,15 @@ interface GoalItemProps {
 }
 
 export default function GoalItem({ id, text, onDeleteGoal }: GoalItemProps) {
+
+  const onPress = () => {
+    router.navigate(`/goals/${id}?sort=asc`);
+  }
   return (
-    <View style={styles.goalItem}>
+    <Pressable style={[styles.goalItem, styles.textContainer]}>
       <Text style={styles.goalText}>{text}</Text>
       <Button title="X" onPress={() => onDeleteGoal(id)} color="red" />
-      <Button title="info" onPress={() => {router.navigate(`/goals/${id}?sort=asc`)}}/>
-    </View>
+    </Pressable>
   )
 }
 
@@ -34,5 +37,8 @@ const styles = StyleSheet.create({
     height: 70,
     borderRadius: 10,
     backgroundColor: "#fce8d4",
+  },
+  textContainer: {
+    
   },
 });
