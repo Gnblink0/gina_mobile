@@ -9,9 +9,17 @@ interface GoalItemProps {
   id: string;
   text: string;
   onDeleteGoal: (id: string) => void;
+  onPressIn?: () => void;
+  onPressOut?: () => void;
 }
 
-export default function GoalItem({ id, text, onDeleteGoal }: GoalItemProps) {
+export default function GoalItem({
+  id,
+  text,
+  onDeleteGoal,
+  onPressIn,
+  onPressOut,
+}: GoalItemProps) {
   const onPress = () => {
     router.navigate(`/goals/${id}?sort=asc`);
   };
@@ -28,6 +36,8 @@ export default function GoalItem({ id, text, onDeleteGoal }: GoalItemProps) {
       }}
       onPress={onPress}
       onLongPress={onLongPress}
+      onPressIn={onPressIn}
+      onPressOut={onPressOut}
       delayLongPress={500}
       android_ripple={{
         color: "#dddddd",

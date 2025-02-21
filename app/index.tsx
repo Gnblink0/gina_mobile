@@ -143,14 +143,23 @@ export default function App() {
               </TouchableOpacity>
             )
           }
-          renderItem={({ item }) => (
+          renderItem={({ item, separators }) => (
             <GoalItem
               text={item.text}
               id={item.id}
               onDeleteGoal={handleDeleteGoal}
+              onPressIn={() => separators.highlight()}
+              onPressOut={() => separators.unhighlight()}
             />
           )}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
+          ItemSeparatorComponent={({ highlighted }) => (
+            <View
+              style={[
+                styles.separator,
+                highlighted && styles.separatorHighlighted,
+              ]}
+            />
+          )}
         />
       </View>
     </SafeAreaView>
@@ -210,5 +219,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#e0e0e0",
     marginHorizontal: 10,
     marginVertical: 5,
+  },
+  separatorHighlighted: {
+    backgroundColor: "#f4511e",
+    height: 2,
   },
 });
