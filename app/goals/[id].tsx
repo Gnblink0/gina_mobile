@@ -2,6 +2,8 @@ import { View, Text, Button } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { getGoalFromDB, GoalData, updateDB } from "@/Firebase/firestoreHelper";
+import PressableButton from "@/components/PressableButoon";
+import { StyleSheet } from "react-native";
 
 export default function GoalDetails() {
   const [goal, setGoal] = useState<GoalData | null>(null);
@@ -29,7 +31,9 @@ export default function GoalDetails() {
         options={{
           title: warning ? "Warning!" : goal?.text,
           headerRight: () => (
-            <Button title="Warning" onPress={handleWarningPress} />
+            <PressableButton onPress={handleWarningPress} style={styles.warningButton}>
+              <Text style={styles.warningText}>Warning</Text>
+            </PressableButton>
           ),
         }}
       />
@@ -37,3 +41,15 @@ export default function GoalDetails() {
     </View>
   );
 }
+const styles = StyleSheet.create({
+  warningButton: {
+    backgroundColor: "red",
+    borderColor: "white",
+    borderWidth: 1,
+  },
+  warningText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+});
