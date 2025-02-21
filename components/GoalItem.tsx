@@ -1,4 +1,4 @@
-import { Button, Pressable, StyleSheet, Text, View } from "react-native";
+import { Alert, Button, Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Link, router } from "expo-router";
 import PressableButton from "./PressableButoon";
@@ -15,12 +15,20 @@ export default function GoalItem({ id, text, onDeleteGoal }: GoalItemProps) {
   const onPress = () => {
     router.navigate(`/goals/${id}?sort=asc`);
   };
+  const onLongPress = () => {
+    Alert.alert("Delete Goal", "Are you sure you want to delete this goal?", [
+      { text: "Cancel", style: "cancel" },
+      { text: "Delete", onPress: () => onDeleteGoal(id) },
+    ]);
+  };
   return (
     <Pressable
       style={({ pressed }) => {
         return [styles.textContainer, pressed && styles.pressedStyle];
       }}
       onPress={onPress}
+      onLongPress={onLongPress}
+      delayLongPress={500}
       android_ripple={{
         color: "#dddddd",
         borderless: false,
