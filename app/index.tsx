@@ -17,11 +17,11 @@ import GoalItem from "../components/GoalItem";
 import { database } from "../Firebase/firebaseSetup";
 import {
   writeToDB,
-  GoalData,
   deleteFromDB,
   deleteAllFromDB,
 } from "../Firebase/firestoreHelper";
 import { collection, onSnapshot } from "firebase/firestore";
+import { GoalData } from "@/types";
 
 interface GoalDB {
   id: string;

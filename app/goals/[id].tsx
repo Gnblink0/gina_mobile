@@ -4,7 +4,7 @@ import { Stack, useLocalSearchParams } from "expo-router";
 import { getGoalFromDB, GoalData, updateDB } from "@/Firebase/firestoreHelper";
 import PressableButton from "@/components/PressableButoon";
 import { StyleSheet } from "react-native";
-
+import GoalUsers from "@/components/GoalUsers";
 export default function GoalDetails() {
   const [goal, setGoal] = useState<GoalData | null>(null);
   const [warning, setWarning] = useState(false);
@@ -38,6 +38,7 @@ export default function GoalDetails() {
         }}
       />
       <Text style={{ color: warning ? "red" : "black" }}>{goal?.text}</Text>
+      <GoalUsers goalId={id as string} />
     </View>
   );
 }
