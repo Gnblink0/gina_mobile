@@ -1,6 +1,6 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
-import { writeToDB } from "@/Firebase/firestoreHelper";
+import { readAllFromDB, writeToDB } from "@/Firebase/firestoreHelper";
 import { User } from "@/types";
 import { GoalData } from "@/types";
 
@@ -14,6 +14,14 @@ export const GoalUsers = ({ goalId }: GoalUsersProps) => {
   useEffect(() => {
     async function getUsers() {
       try {
+        // read all users from the database
+        const usersFromDB = await readAllFromDB(`goals/${goalId}/users`);
+        console.log(usersFromDB);
+        if (usersFromDB) {
+          setUsers(usersFromDB as User[]);
+          return;
+        } 
+        // if no users are found, fetch users from the API
         const res = await fetch("https://jsonplaceholder.typicode.com/users");
         if (!res.ok) {
           throw new Error(`Something went wrong with the ${res.status} code`);

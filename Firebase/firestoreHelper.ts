@@ -43,6 +43,17 @@ export async function deleteAllFromDB(collectionName: string) {
   }
 }
 
+// read all documents from the database
+export async function readAllFromDB(collectionName: string) {
+  const querySnapshot = await getDocs(collection(database,collectionName));
+  if (querySnapshot.empty) {
+    console.log("No documents found");
+    return null;
+  }
+  return querySnapshot.docs.map((doc) => doc.data());
+}
+
+// read a single document from the database
 export async function getGoalFromDB(id: string, collectionName: string) {
   try {
     const docRef = doc(collection(database, collectionName), id);
