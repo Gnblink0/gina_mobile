@@ -38,7 +38,7 @@ export default function GoalDetails() {
         }}
       />
       <Text style={{ color: warning ? "red" : "black" }}>{goal?.text}</Text>
-      <GoalUsers />
+      <GoalUsers goalId={id as string} />
     </View>
   );
 }

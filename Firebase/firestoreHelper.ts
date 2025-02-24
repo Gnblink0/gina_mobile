@@ -8,12 +8,11 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { database } from "./firebaseSetup";
+import { User, GoalData } from "@/types";
 
-export interface GoalData {
-  text: string;
-}
 
-export async function writeToDB(data: GoalData, collectionName: string) {
+
+export async function writeToDB(data: GoalData|User, collectionName: string) {
   try {
     const docRef = await addDoc(collection(database, collectionName), data);
     return docRef.id;
