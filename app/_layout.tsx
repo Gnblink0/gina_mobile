@@ -1,19 +1,24 @@
 import { Stack } from "expo-router/stack";
+import { useEffect, useState } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/Firebase/firebaseSetup";
+import { ActivityIndicator, View } from "react-native";
 
-export default function Layout() {
+export default function RootLayout() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    // Temporary mock authentication
+    setIsAuthenticated(false);
+  }, []);
+
   return (
-    <Stack
-      screenOptions={{
-        headerStyle: { backgroundColor: "#f4511e" },
-        headerTintColor: "#fff",
-        headerTitleStyle: { color: "#fff" },
-      }}
-    >
-      <Stack.Screen
-        name="index"
-        options={{ title: "Home" }}
-      />
-      <Stack.Screen name="goals/[id]" />
+    <Stack screenOptions={{ headerShown: false }}>
+      {!isAuthenticated ? (
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+      ) : (
+        <Stack.Screen name="(protected)" options={{ headerShown: false }} />
+      )}
     </Stack>
   );
 }

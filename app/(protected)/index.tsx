@@ -10,16 +10,16 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import Header from "../components/Header";
-import Input from "../components/Input";
+import Header from "../../components/Header";
+import Input from "../../components/Input";
 import { useState, useEffect } from "react";
-import GoalItem from "../components/GoalItem";
-import { database } from "../Firebase/firebaseSetup";
+import GoalItem from "../../components/GoalItem";
+import { database } from "../../Firebase/firebaseSetup";
 import {
   writeToDB,
   deleteFromDB,
   deleteAllFromDB,
-} from "../Firebase/firestoreHelper";
+} from "../../Firebase/firestoreHelper";
 import { collection, onSnapshot } from "firebase/firestore";
 import { GoalData } from "@/types";
 
