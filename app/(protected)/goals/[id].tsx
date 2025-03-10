@@ -1,10 +1,11 @@
 import { View, Text, Button } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Stack, useLocalSearchParams } from "expo-router";
-import { getGoalFromDB, GoalData, updateDB } from "@/Firebase/firestoreHelper";
+import { getGoalFromDB, updateDB } from "@/Firebase/firestoreHelper";
 import PressableButton from "@/components/PressableButoon";
 import { StyleSheet } from "react-native";
 import GoalUsers from "@/components/GoalUsers";
+import { GoalData } from "@/types";
 export default function GoalDetails() {
   const [goal, setGoal] = useState<GoalData | null>(null);
   const [warning, setWarning] = useState(false);
