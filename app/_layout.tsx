@@ -3,11 +3,12 @@ import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/Firebase/firebaseSetup";
 import { ActivityIndicator, View } from "react-native";
-import { router, Slot } from "expo-router";
+import { router, Slot, useSegments } from "expo-router";
 
 export default function RootLayout() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const segments = useSegments();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -25,12 +26,17 @@ export default function RootLayout() {
   }, []);
 
   useEffect(() => {
-    if (userLoggedIn) {
+    if (isLoading) return;
+
+    const inAuthGroup = segments[0] === "(auth)";
+    const inProtectedGroup = segments[0] === "(protected)";
+
+    if (userLoggedIn && inAuthGroup) {
       router.replace("/(protected)/");
-    } else if (!userLoggedIn) {
+    } else if (!userLoggedIn && inProtectedGroup) {
       router.replace("/(auth)/login");
     }
-  }, [userLoggedIn]);
+  }, [userLoggedIn, isLoading, segments]);
 
   if (isLoading) {
     return (
@@ -40,5 +46,13 @@ export default function RootLayout() {
     );
   }
 
-  return <Slot />;
+  return (
+    <Stack screenOptions={{ headerShown: false, animation: "fade" }}>
+      <Stack.Screen name="(auth)" options={{ animation: "slide_from_left" }} />
+      <Stack.Screen
+        name="(protected)"
+        options={{ animation: "slide_from_right" }}
+      />
+    </Stack>
+  );
 }
