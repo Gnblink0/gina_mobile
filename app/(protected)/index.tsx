@@ -10,17 +10,17 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import Header from "../components/Header";
-import Input from "../components/Input";
+import Header from "../../components/Header";
+import Input from "../../components/Input";
 import { useState, useEffect } from "react";
-import GoalItem from "../components/GoalItem";
-import { database } from "../Firebase/firebaseSetup";
+import GoalItem from "../../components/GoalItem";
+import { database, auth } from "../../Firebase/firebaseSetup";
 import {
   writeToDB,
   deleteFromDB,
   deleteAllFromDB,
-} from "../Firebase/firestoreHelper";
-import { collection, onSnapshot } from "firebase/firestore";
+} from "../../Firebase/firestoreHelper";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { GoalData } from "@/types";
 
 interface GoalDB {
@@ -36,7 +36,10 @@ export default function App() {
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
-      collection(database, "goals"),
+      query(
+        collection(database, "goals"),
+        where("owner", "==", auth.currentUser?.uid)
+      ),
       (querySnapshot) => {
         if (querySnapshot.empty) {
           setGoals([]);
@@ -47,25 +50,29 @@ export default function App() {
           });
           setGoals(updatedGoals);
         }
+      },
+      (error) => {
+        console.error("Error listening to goals: ", error);
       }
     );
 
     return () => unsubscribe();
   }, []);
 
-  function handleInputData(text: string) {
-    console.log("data received from input", text);
-    // setInputText(text);
-    let newGoal: GoalData = { text: text };
-    writeToDB(newGoal, "goals")
-      .then((id) => {
-        console.log("Document written with ID: ", id);
-        setIsModalVisible(false);
-      })
-      .catch((error) => {
-        console.error("Failed to add goal: ", error);
-      });
-  }
+  const handleInputData = async (text: string) => {
+    const goal = {
+      text: text,
+      owner: auth.currentUser?.uid,
+    };
+
+    try {
+      const id = await writeToDB(goal, "goals");
+      console.log("Goal added with ID: ", id);
+      setIsModalVisible(false);
+    } catch (error) {
+      console.error("Error adding goal: ", error);
+    }
+  };
 
   function handleCancel() {
     setIsModalVisible(false);
