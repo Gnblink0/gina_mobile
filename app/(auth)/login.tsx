@@ -1,14 +1,51 @@
-import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  Pressable,
+  Alert,
+} from "react-native";
 import { useState } from "react";
 import { router } from "expo-router";
+import { auth } from "@/Firebase/firebaseSetup";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
-    // 这里之后我们会添加登录逻辑
-    console.log("Login attempt with:", email, password);
+  const handleLogin = async () => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      console.log("User logged in:", userCredential.user);
+    } catch (error: any) {
+      let errorMessage = "Failed to log in";
+
+      console.error("Login error:", error);
+      console.error("Error code:", error.code);
+      console.error("Error message:", error.message);
+
+      switch (error.code) {
+        case "auth/invalid-email":
+          errorMessage = "Invalid email address";
+          break;
+        case "auth/user-not-found":
+          errorMessage = "No account with this email";
+          break;
+        case "auth/wrong-password":
+          errorMessage = "Incorrect password";
+          break;
+        default:
+          errorMessage = `Error: ${error.message}`;
+      }
+
+      Alert.alert("Error", errorMessage);
+    }
   };
 
   const handleNavigateToSignup = () => {
