@@ -1,15 +1,59 @@
-import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
+import React from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  Pressable,
+  Alert,
+} from "react-native";
 import { useState } from "react";
-import { router } from "expo-router";
+import { router, Stack } from "expo-router";
+import { auth } from "@/Firebase/firebaseSetup";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSignup = () => {
-    // 这里之后我们会添加注册逻辑
-    console.log("Signup attempt with:", email, password, confirmPassword);
+  const handleSignup = async () => {
+    if (password !== confirmPassword) {
+      Alert.alert("Error", "Passwords do not match");
+      return;
+    }
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      console.log("User created:", userCredential.user);
+    } catch (error: any) {
+      let errorMessage = "Failed to create account";
+
+      // Add detailed error logging
+      console.error("Signup error:", error);
+      console.error("Error code:", error.code);
+      console.error("Error message:", error.message);
+
+      switch (error.code) {
+        case "auth/email-already-in-use":
+          errorMessage = "Email already registered";
+          break;
+        case "auth/invalid-email":
+          errorMessage = "Invalid email address";
+          break;
+        case "auth/weak-password":
+          errorMessage = "Password is too weak";
+          break;
+        default:
+          errorMessage = `Error: ${error.message}`; // Show actual error message
+      }
+
+      Alert.alert("Error", errorMessage);
+    }
   };
 
   const handleNavigateToLogin = () => {
@@ -17,43 +61,50 @@ export default function Signup() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>Email Address</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
+    <>
+      <Stack.Screen
+        options={{
+          headerBackVisible: false,
+        }}
       />
+      <View style={styles.container}>
+        <Text style={styles.label}>Email Address</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
 
-      <Text style={styles.label}>Password</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
+        <Text style={styles.label}>Password</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
 
-      <Text style={styles.label}>Confirm Password</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Confirm Password"
-        value={confirmPassword}
-        onChangeText={setConfirmPassword}
-        secureTextEntry
-      />
+        <Text style={styles.label}>Confirm Password</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+          secureTextEntry
+        />
 
-      <Pressable style={styles.button} onPress={handleSignup}>
-        <Text style={styles.buttonText}>Register</Text>
-      </Pressable>
+        <Pressable style={styles.button} onPress={handleSignup}>
+          <Text style={styles.buttonText}>Register</Text>
+        </Pressable>
 
-      <Pressable style={styles.linkButton} onPress={handleNavigateToLogin}>
-        <Text style={styles.linkText}>Already Registered? Login</Text>
-      </Pressable>
-    </View>
+        <Pressable style={styles.linkButton} onPress={handleNavigateToLogin}>
+          <Text style={styles.linkText}>Already Registered? Login</Text>
+        </Pressable>
+      </View>
+    </>
   );
 }
 
