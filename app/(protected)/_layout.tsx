@@ -2,6 +2,8 @@ import { Stack } from "expo-router/stack";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Pressable } from "react-native";
 import { router } from "expo-router";
+import { signOut } from "firebase/auth";
+import { auth } from "@/Firebase/firebaseSetup";
 
 export default function ProtectedLayout() {
   return (
@@ -42,6 +44,23 @@ export default function ProtectedLayout() {
         name="profile"
         options={{
           title: "Profile",
+          headerRight: () => (
+            <Pressable
+              onPress={async () => {
+                try {
+                  await signOut(auth);
+                } catch (error) {
+                  console.error("Error signing out:", error);
+                }
+              }}
+              style={({ pressed }) => ({
+                opacity: pressed ? 0.5 : 1,
+                marginRight: 15,
+              })}
+            >
+              <MaterialIcons name="logout" size={24} color="#fff" />
+            </Pressable>
+          ),
         }}
       />
     </Stack>

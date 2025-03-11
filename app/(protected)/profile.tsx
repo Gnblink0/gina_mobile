@@ -1,9 +1,20 @@
 import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 import { auth } from "@/Firebase/firebaseSetup";
+import { signOut } from "firebase/auth";
+import PressableButton from "@/components/PressableButoon";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export default function Profile() {
   const user = auth.currentUser;
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error("Error signing out: ", error);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -42,5 +53,19 @@ const styles = StyleSheet.create({
   value: {
     fontSize: 18,
     color: "#333",
+  },
+  signOutButton: {
+    backgroundColor: "#f4511e",
+    marginTop: 20,
+  },
+  buttonContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  signOutText: {
+    color: "white",
+    fontSize: 16,
+    marginLeft: 8,
   },
 });
