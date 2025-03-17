@@ -2,9 +2,13 @@ import { Button, StyleSheet, Text, View, Alert, Image } from "react-native";
 import React, { useState } from "react";
 import { launchCameraAsync, useCameraPermissions } from "expo-image-picker";
 
-const ImageManager = () => {
+interface ImageManagerProps {
+  imageUriHandler: (uri: string) => void;
+  imageUri: string;
+}
+
+const ImageManager = ({ imageUriHandler, imageUri }: ImageManagerProps) => {
   const [permissionResponse, requestPermission] = useCameraPermissions();
-  const [imageUri, setImageUri] = useState("");
 
   const verifyPermissions = async () => {
     if (permissionResponse?.granted) return true;
@@ -30,7 +34,7 @@ const ImageManager = () => {
         quality: 0.2,
       });
       if (result.canceled) return;
-      setImageUri(result.assets[0].uri);
+      imageUriHandler(result.assets[0].uri);
     } catch (error) {
       console.log("Error taking image", error);
     }

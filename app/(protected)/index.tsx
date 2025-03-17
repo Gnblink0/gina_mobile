@@ -64,9 +64,10 @@ export default function App() {
     return () => unsubscribe();
   }, [auth.currentUser]);
 
-  const handleInputData = async (text: string) => {
+  const handleInputData = async (text: string, imageUri: string) => {
     const goal = {
       text: text,
+      imageUri: imageUri,
       owner: auth.currentUser?.uid,
     };
 
