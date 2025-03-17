@@ -36,7 +36,8 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "The app needs access to your photos to let you change your profile picture."
+          "photosPermission": "The app needs access to your photos to let you add them to your goals.",
+          "cameraPermission": "The app needs access to your camera to let you take photos and add them to your goals."
         }
       ]
     ]

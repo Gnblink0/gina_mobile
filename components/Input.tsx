@@ -1,6 +1,6 @@
 import { Button, StyleSheet, Text, TextInput, View, Modal, Alert, Image } from 'react-native'
 import React, { useState } from 'react'
-
+import ImageManager from './ImageManager'
 interface InputProps {
   autoFocus?: boolean;
   onInput: (text: string) => void;
@@ -83,6 +83,7 @@ export default function Input({ autoFocus, onInput, onCancel, visible }: InputPr
                 : "Please type more than 3 characters"}
             </Text>
           )}
+          <ImageManager />
           <View style={styles.buttonContainer}>
             <View style={styles.button}>
               <Button 
