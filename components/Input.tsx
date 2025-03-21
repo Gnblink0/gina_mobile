@@ -1,9 +1,9 @@
 import { Button, StyleSheet, Text, TextInput, View, Modal, Alert, Image } from 'react-native'
 import React, { useState } from 'react'
-
+import ImageManager from './ImageManager'
 interface InputProps {
   autoFocus?: boolean;
-  onInput: (text: string) => void;
+  onInput: (text: string, imageUri: string) => void;
   onCancel: () => void;
   visible: boolean;
 }
@@ -14,16 +14,18 @@ export default function Input({ autoFocus, onInput, onCancel, visible }: InputPr
   const [text, setText] = useState('');
   const [charCount, setCharCount] = useState(0);
   const [isFocused, setIsFocused] = useState(true);
+  const [takenImageUri, setTakenImageUri] = useState("");
 
   const handleTextChange = (text: string) => {
     setText(text);
     setCharCount(text.length);
   };
   
-  const handleConfirm = () => {
-    onInput(text);
+  const handleConfirm = () => { 
+    onInput(text, takenImageUri);
     setText('');
     setCharCount(0);
+    setTakenImageUri('');
   };
 
   const handleCancel = () => {
@@ -40,7 +42,11 @@ export default function Input({ autoFocus, onInput, onCancel, visible }: InputPr
       ]
     );
   };
-  
+
+  const handleImageUri = (uri: string) => {
+    setTakenImageUri(uri);
+  };
+
   return (
     <Modal 
       visible={visible}
@@ -83,6 +89,7 @@ export default function Input({ autoFocus, onInput, onCancel, visible }: InputPr
                 : "Please type more than 3 characters"}
             </Text>
           )}
+          <ImageManager imageUriHandler={handleImageUri} imageUri={takenImageUri}/>
           <View style={styles.buttonContainer}>
             <View style={styles.button}>
               <Button 

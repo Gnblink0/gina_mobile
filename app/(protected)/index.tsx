@@ -35,10 +35,15 @@ export default function App() {
   const [goals, setGoals] = useState<GoalDB[]>([]);
 
   useEffect(() => {
+    if (!auth.currentUser) {
+      setGoals([]);
+      return;
+    }
+
     const unsubscribe = onSnapshot(
       query(
         collection(database, "goals"),
-        where("owner", "==", auth.currentUser?.uid)
+        where("owner", "==", auth.currentUser.uid)
       ),
       (querySnapshot) => {
         if (querySnapshot.empty) {
@@ -57,11 +62,12 @@ export default function App() {
     );
 
     return () => unsubscribe();
-  }, []);
+  }, [auth.currentUser]);
 
-  const handleInputData = async (text: string) => {
+  const handleInputData = async (text: string, imageUri: string) => {
     const goal = {
       text: text,
+      imageUri: imageUri,
       owner: auth.currentUser?.uid,
     };
 
