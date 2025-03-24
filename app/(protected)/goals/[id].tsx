@@ -6,9 +6,14 @@ import PressableButton from "@/components/PressableButoon";
 import { StyleSheet } from "react-native";
 import GoalUsers from "@/components/GoalUsers";
 import { GoalData } from "@/types";
+import { Image } from "react-native";
+import { getDownloadURL, ref } from "firebase/storage";
+import { storage } from "@/Firebase/firebaseSetup";
+
 export default function GoalDetails() {
   const [goal, setGoal] = useState<GoalData | null>(null);
   const [warning, setWarning] = useState(false);
+  const [image, setImage] = useState<string | null>(null);
   const { id } = useLocalSearchParams<{ id: string }>();
   useEffect(() => {
     const fetchGoal = async () => {
@@ -16,6 +21,11 @@ export default function GoalDetails() {
       if (goalData) {
         setGoal(goalData as GoalData);
         setWarning(goalData.warning || false);
+        if (goalData.imagePath) {
+          const reference = ref(storage, goalData.imagePath);
+          const url = await getDownloadURL(reference);
+          setImage(url);
+        }
       }
     };
     fetchGoal();
@@ -40,6 +50,7 @@ export default function GoalDetails() {
       />
       <Text style={{ color: warning ? "red" : "black" }}>{goal?.text}</Text>
       <GoalUsers goalId={id as string} />
+      {image && <Image source={{ uri: image }} style={styles.image} />}
     </View>
   );
 }
@@ -53,5 +64,9 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  image: {
+    width: 200,
+    height: 200,
   },
 });
