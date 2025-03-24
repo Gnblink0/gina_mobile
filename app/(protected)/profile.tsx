@@ -5,9 +5,10 @@ import { signOut } from "firebase/auth";
 import PressableButton from "@/components/PressableButoon";
 import { MaterialIcons } from "@expo/vector-icons";
 import LocationManager from "@/components/LocationManager";
+import { useLocalSearchParams } from "expo-router";
 export default function Profile() {
   const user = auth.currentUser;
-
+  
   const handleSignOut = async () => {
     try {
       await signOut(auth);

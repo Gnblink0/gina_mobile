@@ -1,12 +1,24 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React, { useState } from 'react'
-import MapView, { Marker } from 'react-native-maps'
-
+import { StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import MapView, { Marker } from "react-native-maps";
+import { Button } from "react-native";
+import { router } from "expo-router";
 const map = () => {
   const [selectedLocation, setSelectedLocation] = useState<{
     latitude: number;
     longitude: number;
   } | null>(null);
+  const pickLocationHandler = () => {
+    if (selectedLocation) {
+      router.navigate({
+        pathname: "profile",
+        params: {
+          lat: selectedLocation.latitude,
+          lng: selectedLocation.longitude,
+        },
+      });
+    }
+  };
   return (
     <View>
       <MapView
@@ -31,15 +43,21 @@ const map = () => {
           }}
         />
       </MapView>
+      <View style={styles.buttonContainer}>
+        {selectedLocation && (
+          <Button title="Pick Location" onPress={pickLocationHandler} />
+        )}
+      </View>
     </View>
   );
-}
+};
 
-export default map
+export default map;
 
 const styles = StyleSheet.create({
   map: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "80%",
   },
-})
+  buttonContainer: {},
+});

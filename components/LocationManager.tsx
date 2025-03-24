@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View, Button, Alert, Image } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   getCurrentPositionAsync,
   useForegroundPermissions,
 } from "expo-location";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 
 const LocationManager = () => {
   const [location, setLocation] = useState<{
@@ -12,6 +12,10 @@ const LocationManager = () => {
     longitude: number;
   } | null>(null);
   const [permissionResponse, requestPermission] = useForegroundPermissions();
+  const params = useLocalSearchParams();
+  // console.log(params);
+
+  
 
   const verifyPermissions = async () => {
     if (permissionResponse?.granted) return true;
@@ -50,13 +54,17 @@ const LocationManager = () => {
     <View>
       <Button title="Find My Location" onPress={locateUserHandler} />
       <Button title="Go to Map" onPress={chooseLocationHandler} />
-      {location && (
-        <Image
-          style={styles.mapImage}
-          source={{
-            uri: `https://maps.geoapify.com/v1/staticmap?style=osm-bright&width=600&height=400&center=lonlat:${location?.longitude},${location?.latitude}&zoom=12&apiKey=${process.env.EXPO_PUBLIC_GEOAPIFY_API_KEY}`,
-          }}
+      {params.lat && params.lng && (
+        <View>
+          <Text>Latitude: {params.lat}</Text>
+          <Text>Longitude: {params.lng}</Text>
+          <Image
+            style={styles.mapImage}
+            source={{
+              uri: `https://maps.geoapify.com/v1/staticmap?style=osm-bright&width=600&height=400&center=lonlat:${params.lng},${params.lat}&zoom=12&apiKey=${process.env.EXPO_PUBLIC_GEOAPIFY_API_KEY}`,
+            }}
         />
+        </View>
       )}
     </View>
   );
