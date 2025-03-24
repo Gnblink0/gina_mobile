@@ -25,7 +25,6 @@ export default function GoalDetails() {
           const reference = ref(storage, goalData.imagePath);
           const url = await getDownloadURL(reference);
           setImage(url);
-          console.log("image", goalData.imagePath);
         }
       }
     };

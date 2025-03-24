@@ -4,7 +4,7 @@ import { auth } from "@/Firebase/firebaseSetup";
 import { signOut } from "firebase/auth";
 import PressableButton from "@/components/PressableButoon";
 import { MaterialIcons } from "@expo/vector-icons";
-
+import LocationManager from "@/components/LocationManager";
 export default function Profile() {
   const user = auth.currentUser;
 
@@ -26,6 +26,7 @@ export default function Profile() {
         <Text style={styles.label}>User ID:</Text>
         <Text style={styles.value}>{user?.uid}</Text>
       </View>
+      <LocationManager />
     </View>
   );
 }
