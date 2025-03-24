@@ -14,7 +14,7 @@ import Header from "../../components/Header";
 import Input from "../../components/Input";
 import { useState, useEffect } from "react";
 import GoalItem from "../../components/GoalItem";
-import { database, auth } from "../../Firebase/firebaseSetup";
+import { database, auth, storage } from "../../Firebase/firebaseSetup";
 import {
   writeToDB,
   deleteFromDB,
@@ -22,7 +22,7 @@ import {
 } from "../../Firebase/firestoreHelper";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { GoalData } from "@/types";
-
+import { getStorage, ref, uploadBytes, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 interface GoalDB {
   id: string;
   text: string;
@@ -65,11 +65,25 @@ export default function App() {
   }, [auth.currentUser]);
 
   const handleInputData = async (text: string, imageUri: string) => {
+    let imagePath;
+
+    try {
+      if (imageUri) {
+        imagePath = await fetchImage(imageUri);
+        console.log("imagePath", imagePath);
+      }
+    } catch (error) {
+      console.error("Error adding goal: ", error);
+    }
+
     const goal = {
       text: text,
-      imageUri: imageUri,
+      imagePath: "",
       owner: auth.currentUser?.uid,
     };
+    if (imagePath) {
+      goal.imagePath = imagePath;
+    }
 
     try {
       const id = await writeToDB(goal, "goals");
@@ -119,6 +133,23 @@ export default function App() {
         },
       ]
     );
+  }
+
+  async function fetchImage(uri: string) {
+    try {
+      const response = await fetch(uri);
+      if (!response.ok) {
+        throw new Error("Failed to fetch image");
+      }
+      const blob = await response.blob();
+      const imageName = uri.substring(uri.lastIndexOf("/") + 1);
+      console.log("imageName", imageName);
+      const imageRef = ref(storage, `images/${imageName}`);
+      const uploadResult = await uploadBytesResumable(imageRef, blob);
+      return uploadResult.metadata.fullPath;
+    } catch (error) {
+      console.error("Error fetching image: ", error);
+    }
   }
 
   return (
