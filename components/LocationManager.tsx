@@ -13,9 +13,22 @@ const LocationManager = () => {
   } | null>(null);
   const [permissionResponse, requestPermission] = useForegroundPermissions();
   const params = useLocalSearchParams();
-  // console.log(params);
+  console.log("params", params);
 
-  
+  useEffect(() => {
+    if (params.lat && params.lng) {
+      const newLat = Number(params.lat);
+      const newLng = Number(params.lng);
+
+      // Only update if values are different
+      if (location?.latitude !== newLat || location?.longitude !== newLng) {
+        setLocation({
+          latitude: newLat,
+          longitude: newLng,
+        });
+      }
+    }
+  }, [params, location]);
 
   const verifyPermissions = async () => {
     if (permissionResponse?.granted) return true;
@@ -27,7 +40,17 @@ const LocationManager = () => {
   };
 
   const chooseLocationHandler = () => {
-    router.navigate("map");
+    if (location?.latitude && location?.longitude) {
+      router.navigate({
+        pathname: "map",
+        params: {
+          lat: location.latitude,
+          lng: location.longitude,
+        },
+      });
+    } else {
+      router.navigate("map");
+    }
   };
 
   const locateUserHandler = async () => {
@@ -54,16 +77,16 @@ const LocationManager = () => {
     <View>
       <Button title="Find My Location" onPress={locateUserHandler} />
       <Button title="Go to Map" onPress={chooseLocationHandler} />
-      {params.lat && params.lng && (
+      {location?.latitude && location?.longitude && (
         <View>
-          <Text>Latitude: {params.lat}</Text>
-          <Text>Longitude: {params.lng}</Text>
+          <Text>Latitude: {location?.latitude}</Text>
+          <Text>Longitude: {location?.longitude}</Text>
           <Image
             style={styles.mapImage}
             source={{
-              uri: `https://maps.geoapify.com/v1/staticmap?style=osm-bright&width=600&height=400&center=lonlat:${params.lng},${params.lat}&zoom=12&apiKey=${process.env.EXPO_PUBLIC_GEOAPIFY_API_KEY}`,
+              uri: `https://maps.geoapify.com/v1/staticmap?style=osm-bright&width=600&height=400&center=lonlat:${location?.longitude},${location?.latitude}&zoom=12&apiKey=${process.env.EXPO_PUBLIC_GEOAPIFY_API_KEY}`,
             }}
-        />
+          />
         </View>
       )}
     </View>
