@@ -5,6 +5,9 @@ import {
   useForegroundPermissions,
 } from "expo-location";
 import { router, useLocalSearchParams } from "expo-router";
+import { writeToDB } from "@/Firebase/firestoreHelper";
+import { User } from "@/types";
+import { auth } from "@/Firebase/firebaseSetup";
 
 const LocationManager = () => {
   const [location, setLocation] = useState<{
@@ -69,6 +72,25 @@ const LocationManager = () => {
         latitude: location.latitude,
         longitude: location.longitude,
       });
+
+      const userId = auth.currentUser?.uid;
+      if (!userId) {
+        console.log("No authenticated user");
+        return;
+      }
+
+      writeToDB(
+        {
+          address: {
+            geo: {
+              latitude: location.latitude,
+              longitude: location.longitude,
+            },
+          },
+        } as User,
+        "users",
+        userId
+      );
     } catch (error) {
       console.log(error);
     }

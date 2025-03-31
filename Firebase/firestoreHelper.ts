@@ -6,16 +6,22 @@ import {
   getDocs,
   getDoc,
   updateDoc,
+  setDoc,
 } from "firebase/firestore";
 import { database } from "./firebaseSetup";
 import { User, GoalData } from "@/types";
 
 
 
-export async function writeToDB(data: GoalData|User, collectionName: string) {
+export async function writeToDB(data: GoalData|User, collectionName: string, id?: string) {
   try {
-    const docRef = await addDoc(collection(database, collectionName), data);
-    return docRef.id;
+    if (id) {
+      const docRef = doc(database, collectionName, id);
+      await setDoc(docRef, data, { merge: true });
+    } else {
+      const docRef = await addDoc(collection(database, collectionName), data);
+      return docRef.id;
+    }
   } catch (error) {
     console.error("Error writing to database: ", error);
   }
@@ -73,3 +79,4 @@ export const updateDB = async (id: string, data: { warning: boolean }) => {
   const docRef = doc(database, "goals", id);
   await updateDoc(docRef, data);
 };
+
