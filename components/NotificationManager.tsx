@@ -14,7 +14,6 @@ const NotificationManager = () => {
   };
 
   const scheduleNotificationHandler = async () => {
-    console.log("Remind me to add my daily goals");
     try {
       const hasPermission = await verifyPermissions();
       if (!hasPermission) {
@@ -29,10 +28,10 @@ const NotificationManager = () => {
           title: "Remind me to add my daily goals",
           body: "Don't forget to add your daily goals",
         },
-      trigger: {
-        seconds: 5,
-        type: SchedulableTriggerInputTypes.TIME_INTERVAL,
-        },
+        trigger: {
+          seconds: 5,
+          type: SchedulableTriggerInputTypes.TIME_INTERVAL,
+          },
       });
     } catch (error) {
       console.log(error);
