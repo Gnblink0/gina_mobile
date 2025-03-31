@@ -60,7 +60,7 @@ export async function readAllFromDB(collectionName: string) {
 }
 
 // read a single document from the database
-export async function getGoalFromDB(id: string, collectionName: string) {
+export async function readDocFromDB(id: string, collectionName: string) {
   try {
     const docRef = doc(collection(database, collectionName), id);
     const docSnapShot = await getDoc(docRef);

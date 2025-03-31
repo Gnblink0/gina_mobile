@@ -5,7 +5,7 @@ import {
   useForegroundPermissions,
 } from "expo-location";
 import { router, useLocalSearchParams } from "expo-router";
-import { writeToDB } from "@/Firebase/firestoreHelper";
+import { writeToDB, readDocFromDB } from "@/Firebase/firestoreHelper";
 import { User } from "@/types";
 import { auth } from "@/Firebase/firebaseSetup";
 
@@ -16,7 +16,25 @@ const LocationManager = () => {
   } | null>(null);
   const [permissionResponse, requestPermission] = useForegroundPermissions();
   const params = useLocalSearchParams();
-  console.log("params", params);
+
+  useEffect(() => {
+    async function fetchUserData(){
+      if (auth.currentUser?.uid){
+        try {
+          const user = await readDocFromDB(auth.currentUser?.uid as string, "users");
+          if (user?.address?.geo){
+            setLocation({
+              latitude: user.address.geo.latitude,
+              longitude: user.address.geo.longitude,
+            });
+          }
+        } catch (error) {
+          console.log("Error fetching user data:", error);
+        }
+      }
+    }
+    fetchUserData();
+  }, []);
 
   useEffect(() => {
     if (params.lat && params.lng) {
@@ -91,6 +109,7 @@ const LocationManager = () => {
         "users",
         userId
       );
+      router.replace("/");
     } catch (error) {
       console.log(error);
     }
