@@ -109,7 +109,6 @@ const LocationManager = () => {
         "users",
         userId
       );
-      router.replace("/");
     } catch (error) {
       console.log(error);
     }
