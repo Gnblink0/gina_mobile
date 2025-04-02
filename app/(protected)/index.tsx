@@ -23,10 +23,19 @@ import {
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { GoalData } from "@/types";
 import { getStorage, ref, uploadBytes, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import { setNotificationHandler } from "expo-notifications";
 interface GoalDB {
   id: string;
   text: string;
 }
+
+setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 export default function App() {
   const appName = "my awesome app";

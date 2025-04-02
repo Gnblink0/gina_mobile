@@ -6,6 +6,7 @@ import PressableButton from "@/components/PressableButoon";
 import { MaterialIcons } from "@expo/vector-icons";
 import LocationManager from "@/components/LocationManager";
 import { useLocalSearchParams } from "expo-router";
+import NotificationManager from "@/components/NotificationManager";
 export default function Profile() {
   const user = auth.currentUser;
   
@@ -28,6 +29,7 @@ export default function Profile() {
         <Text style={styles.value}>{user?.uid}</Text>
       </View>
       <LocationManager />
+      <NotificationManager />
     </View>
   );
 }

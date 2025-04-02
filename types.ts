@@ -4,7 +4,11 @@ export interface GoalData {
 
 export interface User {
   id: number;
-  name: string;
-  email: string;
+  address: {
+    geo: {
+      latitude: number;
+      longitude: number;
+    };
+  };
 }
 

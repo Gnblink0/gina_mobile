@@ -2,15 +2,22 @@ import { StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import MapView, { Marker } from "react-native-maps";
 import { Button } from "react-native";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 const map = () => {
+  const params = useLocalSearchParams();
+  const initialLocation = {
+    latitude: params.lat ? Number(params.lat) : 37.78825,
+    longitude: params.lng ? Number(params.lng) : -122.4324,
+  };
+  // console.log("initialLocation", initialLocation);
   const [selectedLocation, setSelectedLocation] = useState<{
     latitude: number;
     longitude: number;
-  } | null>(null);
+  } | null>(initialLocation);
   const pickLocationHandler = () => {
+    // console.log("selectedLocation", selectedLocation);
     if (selectedLocation) {
-      router.navigate({
+      router.replace({
         pathname: "profile",
         params: {
           lat: selectedLocation.latitude,
@@ -30,16 +37,16 @@ const map = () => {
           });
         }}
         initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
+          latitude: initialLocation.latitude,
+          longitude: initialLocation.longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
       >
         <Marker
           coordinate={{
-            latitude: selectedLocation?.latitude ?? 37.78825,
-            longitude: selectedLocation?.longitude ?? -122.4324,
+            latitude: selectedLocation?.latitude ?? initialLocation.latitude,
+            longitude: selectedLocation?.longitude ?? initialLocation.longitude,
           }}
         />
       </MapView>
